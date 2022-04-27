@@ -1,12 +1,10 @@
-package com.android.cryptoapp
+package com.android.cryptoapp.presentation
 
 import android.os.Bundle
-import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
-import com.android.cryptoapp.adapters.CoinInfoAdapter
+import com.android.cryptoapp.presentation.adapters.CoinInfoAdapter
 import com.android.cryptoapp.databinding.ActivityCoinPriceBinding
-import com.android.cryptoapp.pojo.CoinPriceInfo
 
 
 class CoinPriceActivity : AppCompatActivity() {
@@ -26,8 +24,10 @@ class CoinPriceActivity : AppCompatActivity() {
             rvAdapter.submitList(it)
         }
         binding.recyclerView.adapter = rvAdapter
+
         rvAdapter.onCoinClickListener = {
-            Log.d("ON_CLICK", it.fromSymbol)
+           val intent = CoinInfoDetailActivity.newIntent(this@CoinPriceActivity, it.fromSymbol)
+            startActivity(intent)
         }
     }
 }

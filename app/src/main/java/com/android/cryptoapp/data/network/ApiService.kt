@@ -1,7 +1,7 @@
-package com.android.cryptoapp.api
+package com.android.cryptoapp.data.network
 
-import com.android.cryptoapp.pojo.CoinInfoListOfData
-import com.android.cryptoapp.pojo.CoinPriceInfoRawData
+import com.android.cryptoapp.data.model.CoinInfoListOfData
+import com.android.cryptoapp.data.model.CoinPriceInfoRawData
 import io.reactivex.Single
 import retrofit2.http.GET
 import retrofit2.http.Query
