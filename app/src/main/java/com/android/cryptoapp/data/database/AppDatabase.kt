@@ -6,8 +6,8 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 import com.android.cryptoapp.data.network.model.CoinInfoDto
 
-@Database(entities = [CoinInfoDbModel::class], version = 1, exportSchema = false)
-abstract class AppDatabase: RoomDatabase() {
+@Database(entities = [CoinInfoDbModel::class], version = 2, exportSchema = false)
+abstract class AppDatabase : RoomDatabase() {
     companion object {
         private var db: AppDatabase? = null
         private const val NAME = "app.db"
@@ -20,7 +20,8 @@ abstract class AppDatabase: RoomDatabase() {
                     context,
                     AppDatabase::class.java,
                     NAME
-                ).build()
+                ).fallbackToDestructiveMigration()
+                    .build()
                 db = instance
                 return instance
             }

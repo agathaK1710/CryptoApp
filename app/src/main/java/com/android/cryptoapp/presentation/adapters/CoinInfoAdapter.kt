@@ -6,13 +6,15 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.android.cryptoapp.R
+import com.android.cryptoapp.data.network.ApiFactory.BASE_IMAGE_URL
 import com.android.cryptoapp.databinding.ItemCoinPriceInfoBinding
-import com.android.cryptoapp.data.network.model.CoinInfoDto
+import com.android.cryptoapp.domain.CoinInfo
+import com.android.cryptoapp.utils.convertTimeStampToTime
 import com.squareup.picasso.Picasso
 
 class CoinInfoAdapter(private val context: Context) :
-    ListAdapter<CoinInfoDto, CoinInfoAdapter.CoinViewHolder>(CoinItemDiffCallback()) {
-    var onCoinClickListener: ((CoinInfoDto) -> Unit)? = null
+    ListAdapter<CoinInfo, CoinInfoAdapter.CoinViewHolder>(CoinItemDiffCallback()) {
+    var onCoinClickListener: ((CoinInfo) -> Unit)? = null
 
     inner class CoinViewHolder(itemView: ItemCoinPriceInfoBinding) :
         RecyclerView.ViewHolder(itemView.root) {
@@ -32,11 +34,11 @@ class CoinInfoAdapter(private val context: Context) :
         val item = getItem(position)
         with(holder) {
             val symbolsTemplate = context.resources.getString(R.string.symbols_template)
-            val lastUpdate = context.resources.getString(R.string.last_update)
+            val lastUpdateTemplate = context.resources.getString(R.string.last_update)
             tvCost.text = item.price.toString()
             tvSymbols.text = String.format(symbolsTemplate, item.fromSymbol, item.toSymbol)
-            tvTime.text = String.format(lastUpdate, item.getFormattedDate())
-            Picasso.get().load(item.getFullImageUrl()).into(ivLogoCoin)
+            tvTime.text = String.format(lastUpdateTemplate, convertTimeStampToTime(item.lastUpdate))
+            Picasso.get().load(BASE_IMAGE_URL + item.imageUrl).into(ivLogoCoin)
             itemView.setOnClickListener {
                 onCoinClickListener?.invoke(item)
             }

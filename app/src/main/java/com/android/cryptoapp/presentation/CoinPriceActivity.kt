@@ -20,7 +20,7 @@ class CoinPriceActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
         val rvAdapter = CoinInfoAdapter(this)
-        viewModel.priceList.observe(this) {
+        viewModel.coinInfoList.observe(this) {
             rvAdapter.submitList(it)
         }
         binding.recyclerView.adapter = rvAdapter
