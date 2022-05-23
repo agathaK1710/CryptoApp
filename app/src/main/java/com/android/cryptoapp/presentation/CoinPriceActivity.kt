@@ -24,7 +24,7 @@ class CoinPriceActivity : AppCompatActivity() {
             rvAdapter.submitList(it)
         }
         binding.recyclerView.adapter = rvAdapter
-
+        binding.recyclerView.itemAnimator = null
         rvAdapter.onCoinClickListener = {
            val intent = CoinInfoDetailActivity.newIntent(this@CoinPriceActivity, it.fromSymbol)
             startActivity(intent)
