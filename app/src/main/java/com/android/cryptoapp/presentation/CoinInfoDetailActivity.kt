@@ -5,9 +5,7 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
-import com.android.cryptoapp.data.network.ApiFactory
 import com.android.cryptoapp.databinding.ActivityCoinInfoDetailBinding
-import com.android.cryptoapp.utils.convertTimeStampToTime
 import com.squareup.picasso.Picasso
 
 class CoinInfoDetailActivity : AppCompatActivity() {
@@ -29,12 +27,12 @@ class CoinInfoDetailActivity : AppCompatActivity() {
         val fromSymbol = intent.getStringExtra(EXTRA_FROM_SYMBOL) ?: EMPTY_SYMBOL
         viewModel.getDetailInfo(fromSymbol).observe(this){
             with(binding) {
-                Picasso.get().load(ApiFactory.BASE_IMAGE_URL + it.imageUrl).into(ivLogoCoin)
+                Picasso.get().load(it.imageUrl).into(ivLogoCoin)
                 tvFromSymbol.text = it.fromSymbol
                 tvToSymbol.text = it.toSymbol
                 tvPrice.text = it.price.toString()
                 tvLastMarket.text = it.lastMarket
-                tvLastUpdate.text = convertTimeStampToTime(it.lastUpdate)
+                tvLastUpdate.text = it.lastUpdate
                 tvMaxPrice.text = it.highDay.toString()
                 tvMinPrice.text = it.lowDay.toString()
             }
