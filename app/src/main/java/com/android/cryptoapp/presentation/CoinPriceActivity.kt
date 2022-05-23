@@ -3,6 +3,7 @@ package com.android.cryptoapp.presentation
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.ViewModelProvider
+import com.android.cryptoapp.R
 import com.android.cryptoapp.presentation.adapters.CoinInfoAdapter
 import com.android.cryptoapp.databinding.ActivityCoinPriceBinding
 
@@ -26,8 +27,23 @@ class CoinPriceActivity : AppCompatActivity() {
         binding.recyclerView.adapter = rvAdapter
         binding.recyclerView.itemAnimator = null
         rvAdapter.onCoinClickListener = {
-           val intent = CoinInfoDetailActivity.newIntent(this@CoinPriceActivity, it.fromSymbol)
-            startActivity(intent)
+            if (isOnePaneMode()) launchDetailActivity(it.fromSymbol)
+            else launchDetailFragment(it.fromSymbol)
         }
+    }
+
+    private fun isOnePaneMode() = binding.fragmentContainer == null
+
+    private fun launchDetailActivity(fromSymbol: String) {
+        val intent = CoinInfoDetailActivity.newIntent(this@CoinPriceActivity, fromSymbol)
+        startActivity(intent)
+    }
+
+    private fun launchDetailFragment(fromSymbol: String) {
+        supportFragmentManager.popBackStack()
+        supportFragmentManager.beginTransaction()
+            .replace(R.id.fragment_container, CoinInfoDetailFragment.newInstance(fromSymbol))
+            .addToBackStack(null)
+            .commit()
     }
 }
