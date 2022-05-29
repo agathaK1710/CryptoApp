@@ -6,15 +6,20 @@ import androidx.work.OneTimeWorkRequest
 import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.WorkerParameters
 import com.android.cryptoapp.data.database.AppDatabase
+import com.android.cryptoapp.data.database.CoinPriceInfoDao
 import com.android.cryptoapp.data.database.mapper.CoinMapper
 import com.android.cryptoapp.data.network.ApiFactory
+import com.android.cryptoapp.data.network.ApiService
 import kotlinx.coroutines.delay
 
-class RefreshDetailWorker(context: Context, workerParameters: WorkerParameters):
+class RefreshDetailWorker(
+    context: Context,
+    workerParameters: WorkerParameters,
+    private val mapper: CoinMapper,
+    private val coinInfoDao: CoinPriceInfoDao,
+    private val apiService: ApiService
+) :
     CoroutineWorker(context, workerParameters) {
-    private val mapper = CoinMapper()
-    private val coinInfoDao = AppDatabase.getInstance(context).coinPriceInfoDao()
-    private val apiService = ApiFactory.apiService
 
     override suspend fun doWork(): Result {
         while (true) {
@@ -30,10 +35,11 @@ class RefreshDetailWorker(context: Context, workerParameters: WorkerParameters):
             delay(10000)
         }
     }
+
     companion object {
         val NAME = "RefreshDetailWorker"
 
-        fun makeRequest(): OneTimeWorkRequest{
+        fun makeRequest(): OneTimeWorkRequest {
             return OneTimeWorkRequestBuilder<RefreshDetailWorker>().build()
         }
     }
