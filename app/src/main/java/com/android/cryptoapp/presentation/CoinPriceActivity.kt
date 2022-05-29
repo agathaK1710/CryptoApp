@@ -6,11 +6,19 @@ import androidx.lifecycle.ViewModelProvider
 import com.android.cryptoapp.R
 import com.android.cryptoapp.presentation.adapters.CoinInfoAdapter
 import com.android.cryptoapp.databinding.ActivityCoinPriceBinding
+import javax.inject.Inject
 
 
 class CoinPriceActivity : AppCompatActivity() {
     private val viewModel by lazy {
-        ViewModelProvider(this)[CoinViewModel::class.java]
+        ViewModelProvider(this, viewModelFactory)[CoinViewModel::class.java]
+    }
+
+    @Inject
+    lateinit var viewModelFactory: ViewModelFactory
+
+    private val component by lazy {
+        (application as CryptoApp).component
     }
 
     private val binding by lazy {
@@ -18,6 +26,7 @@ class CoinPriceActivity : AppCompatActivity() {
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        component.inject(this)
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
         val rvAdapter = CoinInfoAdapter(this)
