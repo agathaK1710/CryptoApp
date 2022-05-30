@@ -4,27 +4,23 @@ import android.content.Context
 import androidx.work.ListenableWorker
 import androidx.work.WorkerFactory
 import androidx.work.WorkerParameters
-import com.android.cryptoapp.data.database.CoinPriceInfoDao
-import com.android.cryptoapp.data.database.mapper.CoinMapper
-import com.android.cryptoapp.data.network.ApiService
 import javax.inject.Inject
+import javax.inject.Provider
 
 class RefreshDetailWorkerFactory @Inject constructor(
-    private val coinPriceInfoDao: CoinPriceInfoDao,
-    private val apiService: ApiService,
-    private val coinMapper: CoinMapper
+    private val workersProvider: @JvmSuppressWildcards Map<Class<out ListenableWorker>, Provider<ChildWorkerFactory>>
 ): WorkerFactory() {
     override fun createWorker(
         appContext: Context,
         workerClassName: String,
         workerParameters: WorkerParameters
     ): ListenableWorker? {
-        return RefreshDetailWorker(
-            appContext,
-            workerParameters,
-            coinMapper,
-            coinPriceInfoDao,
-            apiService
-        )
+        return when(workerClassName){
+            RefreshDetailWorker::class.qualifiedName -> {
+                val child = workersProvider[RefreshDetailWorker::class.java]?.get()
+                child?.create(appContext, workerParameters)
+            }
+            else -> null
+        }
     }
 }
